@@ -14,7 +14,7 @@ from sklearn.impute import SimpleImputer
 NUMERIC_FEATURES = [
     "age", "tenure_months", "monthly_fee", "total_revenue",
     "payment_failures", "support_tickets", "avg_session_time",
-    "monthly_logins", "nps_score",
+    "monthly_logins", "nps_score", "csat_score",
 ]
 
 CATEGORICAL_FEATURES = ["gender", "contract_type"]

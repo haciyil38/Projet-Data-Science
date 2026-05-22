@@ -204,6 +204,7 @@ elif page == "Simulation Client":
         avg_session_time = st.slider("Durée session (min)", 0, 120, 30)
         monthly_logins = st.slider("Connexions/mois", 0, 100, 15)
         nps_score = st.slider("NPS Score", -100, 100, 20)
+        csat_score = st.slider("CSAT Score (satisfaction 1-5)", 1, 5, 4)
         gender = st.selectbox("Genre", ["Male", "Female"])
         contract_type = st.selectbox("Type de contrat", ["Monthly", "Yearly", "Quarterly"])
 
@@ -212,7 +213,7 @@ elif page == "Simulation Client":
         "total_revenue": total_revenue, "payment_failures": payment_failures,
         "support_tickets": support_tickets, "avg_session_time": avg_session_time,
         "monthly_logins": monthly_logins, "nps_score": nps_score,
-        "gender": gender, "contract_type": contract_type,
+        "csat_score": csat_score, "gender": gender, "contract_type": contract_type,
     }])
 
     API_URL = "http://localhost:8000"
@@ -235,7 +236,7 @@ elif page == "Simulation Client":
                 "total_revenue": total_revenue, "payment_failures": payment_failures,
                 "support_tickets": support_tickets, "avg_session_time": avg_session_time,
                 "monthly_logins": monthly_logins, "nps_score": nps_score,
-                "gender": gender, "contract_type": contract_type,
+                "csat_score": csat_score, "gender": gender, "contract_type": contract_type,
             }
             resp = requests.post(f"{API_URL}/predict?model_name={model_name}", json=payload, timeout=5)
             if resp.status_code == 200:

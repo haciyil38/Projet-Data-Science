@@ -51,6 +51,7 @@ class ClientFeatures(BaseModel):
     avg_session_time: float = Field(..., ge=0, example=38.0)
     monthly_logins: int = Field(..., ge=0, example=44)
     nps_score: int = Field(..., ge=-100, le=100, example=8)
+    csat_score: int = Field(..., ge=1, le=5, example=5)
     gender: str = Field(..., example="Female")
     contract_type: str = Field(..., example="Monthly")
 
