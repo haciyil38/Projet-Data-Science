@@ -191,29 +191,96 @@ elif page == "Simulation Client":
                               help="Le Gradient Boosting est le modèle recommandé (meilleur F1 et ROC-AUC).")
     model = models[model_name]
 
+    # ── Scénarios de démonstration ────────────────────────────────────────────
+    S1 = dict(age=27, tenure_months=59, monthly_fee=20.0, gender="Male",
+              customer_segment="Individual", contract_type="Monthly",
+              country="Canada", city="Toronto",
+              monthly_logins=19, last_login_days_ago=2, avg_session_time=18,
+              weekly_active_days=5, features_used=7, usage_growth_rate=0.05,
+              email_open_rate=0.5, marketing_click_rate=0.3,
+              csat_score=4, nps_score=31, payment_failures=1, support_tickets=3,
+              avg_resolution_time=24, escalations=0, referral_count=2,
+              payment_method="Card", discount_applied="No",
+              price_increase_last_3m="No", complaint_type="Service",
+              survey_response="Satisfied", signup_channel="Web")
+
+    S2 = dict(age=47, tenure_months=1, monthly_fee=20.0, gender="Female",
+              customer_segment="Individual", contract_type="Monthly",
+              country="Canada", city="New York",
+              monthly_logins=23, last_login_days_ago=45, avg_session_time=8,
+              weekly_active_days=3, features_used=3, usage_growth_rate=-0.1,
+              email_open_rate=0.2, marketing_click_rate=0.1,
+              csat_score=3, nps_score=-20, payment_failures=0, support_tickets=0,
+              avg_resolution_time=48, escalations=1, referral_count=0,
+              payment_method="Card", discount_applied="No",
+              price_increase_last_3m="No", complaint_type="Service",
+              survey_response="Neutral", signup_channel="Web")
+
+    st.markdown("**Scénarios de démonstration**")
+    btn_col1, btn_col2, _ = st.columns([1, 1, 4])
+    if btn_col1.button("S1 — Client fidèle", type="secondary"):
+        for k, v in S1.items():
+            st.session_state[f"sim_{k}"] = v
+        st.rerun()
+    if btn_col2.button("S2 — Client à risque", type="secondary"):
+        for k, v in S2.items():
+            st.session_state[f"sim_{k}"] = v
+        st.rerun()
+
+    def sv(key, default):
+        return st.session_state.get(f"sim_{key}", default)
+
     col1, col2, col3 = st.columns(3)
     with col1:
-        age = st.slider("Âge", 18, 80, 35)
-        tenure_months = st.slider("Ancienneté (mois)", 0, 72, 12)
-        monthly_fee = st.number_input("Charges mensuelles (€)", 10.0, 500.0, 80.0)
+        st.markdown("**Profil client**")
+        age = st.slider("Âge", 18, 80, sv("age", 35), key="sim_age")
+        tenure_months = st.slider("Ancienneté (mois)", 0, 72, sv("tenure_months", 12), key="sim_tenure_months")
+        monthly_fee = st.number_input("Charges mensuelles (€)", 10.0, 500.0, float(sv("monthly_fee", 20.0)), key="sim_monthly_fee")
+        gender = st.selectbox("Genre", ["Male", "Female"], index=["Male", "Female"].index(sv("gender", "Male")), key="sim_gender")
+        customer_segment = st.selectbox("Segment", ["Individual", "SME", "Enterprise"], index=["Individual", "SME", "Enterprise"].index(sv("customer_segment", "Individual")), key="sim_customer_segment")
+        contract_type = st.selectbox("Type de contrat", ["Monthly", "Yearly", "Quarterly"], index=["Monthly", "Yearly", "Quarterly"].index(sv("contract_type", "Monthly")), key="sim_contract_type")
+        country = st.selectbox("Pays", ["Canada", "USA", "UK", "Germany", "France", "Australia", "India"], index=["Canada", "USA", "UK", "Germany", "France", "Australia", "India"].index(sv("country", "Canada")), key="sim_country")
+        city = st.selectbox("Ville", ["New York", "London", "Berlin", "Sydney", "Toronto", "Delhi", "Dhaka"], index=["New York", "London", "Berlin", "Sydney", "Toronto", "Delhi", "Dhaka"].index(sv("city", "New York")), key="sim_city")
     with col2:
-        total_revenue = st.number_input("Revenu total (€)", 0.0, 50000.0, 960.0)
-        payment_failures = st.slider("Échecs de paiement", 0, 20, 0)
-        support_tickets = st.slider("Tickets support", 0, 30, 2)
+        st.markdown("**Comportement d'usage**")
+        monthly_logins = st.slider("Connexions/mois", 0, 100, sv("monthly_logins", 15), key="sim_monthly_logins")
+        last_login_days_ago = st.slider("Dernière connexion (jours)", 0, 90, sv("last_login_days_ago", 5), key="sim_last_login_days_ago")
+        avg_session_time = st.slider("Durée session (min)", 0, 120, sv("avg_session_time", 20), key="sim_avg_session_time")
+        weekly_active_days = st.slider("Jours actifs/semaine", 0, 7, sv("weekly_active_days", 4), key="sim_weekly_active_days")
+        features_used = st.slider("Fonctionnalités utilisées", 0, 20, sv("features_used", 5), key="sim_features_used")
+        usage_growth_rate = st.slider("Taux de croissance usage", -1.0, 1.0, float(sv("usage_growth_rate", 0.0)), step=0.05, key="sim_usage_growth_rate")
+        email_open_rate = st.slider("Taux ouverture email", 0.0, 1.0, float(sv("email_open_rate", 0.4)), step=0.05, key="sim_email_open_rate")
+        marketing_click_rate = st.slider("Taux clic marketing", 0.0, 1.0, float(sv("marketing_click_rate", 0.2)), step=0.05, key="sim_marketing_click_rate")
     with col3:
-        avg_session_time = st.slider("Durée session (min)", 0, 120, 30)
-        monthly_logins = st.slider("Connexions/mois", 0, 100, 15)
-        nps_score = st.slider("NPS Score", -100, 100, 20)
-        csat_score = st.slider("CSAT Score (satisfaction 1-5)", 1, 5, 4)
-        gender = st.selectbox("Genre", ["Male", "Female"])
-        contract_type = st.selectbox("Type de contrat", ["Monthly", "Yearly", "Quarterly"])
+        st.markdown("**Satisfaction & Support**")
+        csat_score = st.slider("CSAT Score (1-5)", 1, 5, sv("csat_score", 4), key="sim_csat_score")
+        nps_score = st.slider("NPS Score", -100, 100, sv("nps_score", 20), key="sim_nps_score")
+        payment_failures = st.slider("Échecs de paiement", 0, 20, sv("payment_failures", 0), key="sim_payment_failures")
+        support_tickets = st.slider("Tickets support", 0, 30, sv("support_tickets", 2), key="sim_support_tickets")
+        avg_resolution_time = st.slider("Temps résolution (h)", 0, 120, sv("avg_resolution_time", 24), key="sim_avg_resolution_time")
+        escalations = st.slider("Escalades", 0, 10, sv("escalations", 0), key="sim_escalations")
+        referral_count = st.slider("Parrainages", 0, 10, sv("referral_count", 1), key="sim_referral_count")
+        payment_method = st.selectbox("Méthode paiement", ["Card", "PayPal", "Bank Transfer"], index=["Card", "PayPal", "Bank Transfer"].index(sv("payment_method", "Card")), key="sim_payment_method")
+        discount_applied = st.selectbox("Remise appliquée", ["No", "Yes"], index=["No", "Yes"].index(sv("discount_applied", "No")), key="sim_discount_applied")
+        price_increase_last_3m = st.selectbox("Hausse prix 3 mois", ["No", "Yes"], index=["No", "Yes"].index(sv("price_increase_last_3m", "No")), key="sim_price_increase_last_3m")
+        complaint_type = st.selectbox("Type de plainte", ["Service", "Billing", "Technical"], index=["Service", "Billing", "Technical"].index(sv("complaint_type", "Service")), key="sim_complaint_type")
+        survey_response = st.selectbox("Réponse enquête", ["Satisfied", "Neutral", "Unsatisfied"], index=["Satisfied", "Neutral", "Unsatisfied"].index(sv("survey_response", "Satisfied")), key="sim_survey_response")
+        signup_channel = st.selectbox("Canal inscription", ["Web", "Mobile", "Referral"], index=["Web", "Mobile", "Referral"].index(sv("signup_channel", "Web")), key="sim_signup_channel")
 
     input_data = pd.DataFrame([{
         "age": age, "tenure_months": tenure_months, "monthly_fee": monthly_fee,
-        "total_revenue": total_revenue, "payment_failures": payment_failures,
-        "support_tickets": support_tickets, "avg_session_time": avg_session_time,
-        "monthly_logins": monthly_logins, "nps_score": nps_score,
-        "csat_score": csat_score, "gender": gender, "contract_type": contract_type,
+        "payment_failures": payment_failures, "support_tickets": support_tickets,
+        "avg_session_time": avg_session_time, "monthly_logins": monthly_logins,
+        "nps_score": nps_score, "csat_score": csat_score,
+        "weekly_active_days": weekly_active_days, "features_used": features_used,
+        "usage_growth_rate": usage_growth_rate, "last_login_days_ago": last_login_days_ago,
+        "avg_resolution_time": avg_resolution_time, "escalations": escalations,
+        "email_open_rate": email_open_rate, "marketing_click_rate": marketing_click_rate,
+        "referral_count": referral_count, "gender": gender, "contract_type": contract_type,
+        "customer_segment": customer_segment, "signup_channel": signup_channel,
+        "payment_method": payment_method, "discount_applied": discount_applied,
+        "price_increase_last_3m": price_increase_last_3m, "complaint_type": complaint_type,
+        "survey_response": survey_response, "country": country, "city": city,
     }])
 
     API_URL = "http://localhost:8000"
@@ -233,10 +300,18 @@ elif page == "Simulation Client":
         if api_available:
             payload = {
                 "age": age, "tenure_months": tenure_months, "monthly_fee": monthly_fee,
-                "total_revenue": total_revenue, "payment_failures": payment_failures,
-                "support_tickets": support_tickets, "avg_session_time": avg_session_time,
-                "monthly_logins": monthly_logins, "nps_score": nps_score,
-                "csat_score": csat_score, "gender": gender, "contract_type": contract_type,
+                "payment_failures": payment_failures, "support_tickets": support_tickets,
+                "avg_session_time": avg_session_time, "monthly_logins": monthly_logins,
+                "nps_score": nps_score, "csat_score": csat_score,
+                "weekly_active_days": weekly_active_days, "features_used": features_used,
+                "usage_growth_rate": usage_growth_rate, "last_login_days_ago": last_login_days_ago,
+                "avg_resolution_time": avg_resolution_time, "escalations": escalations,
+                "email_open_rate": email_open_rate, "marketing_click_rate": marketing_click_rate,
+                "referral_count": referral_count, "gender": gender, "contract_type": contract_type,
+                "customer_segment": customer_segment, "signup_channel": signup_channel,
+                "payment_method": payment_method, "discount_applied": discount_applied,
+                "price_increase_last_3m": price_increase_last_3m, "complaint_type": complaint_type,
+                "survey_response": survey_response, "country": country, "city": city,
             }
             resp = requests.post(f"{API_URL}/predict?model_name={model_name}", json=payload, timeout=5)
             if resp.status_code == 200:

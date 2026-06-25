@@ -3,7 +3,6 @@ Pipeline de préparation des données pour la prédiction du churn.
 """
 
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
@@ -12,12 +11,19 @@ from sklearn.impute import SimpleImputer
 
 
 NUMERIC_FEATURES = [
-    "age", "tenure_months", "monthly_fee", "total_revenue",
+    "age", "tenure_months", "monthly_fee",
     "payment_failures", "support_tickets", "avg_session_time",
     "monthly_logins", "nps_score", "csat_score",
+    "weekly_active_days", "features_used", "usage_growth_rate",
+    "last_login_days_ago", "avg_resolution_time", "escalations",
+    "email_open_rate", "marketing_click_rate", "referral_count",
 ]
 
-CATEGORICAL_FEATURES = ["gender", "contract_type"]
+CATEGORICAL_FEATURES = [
+    "gender", "contract_type", "customer_segment", "signup_channel",
+    "payment_method", "discount_applied", "price_increase_last_3m",
+    "complaint_type", "survey_response", "country", "city",
+]
 
 TARGET = "churn"
 

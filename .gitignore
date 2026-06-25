@@ -1,9 +1,37 @@
-/.DS_Store
-/CLAUDE.md
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Données brutes (télécharger depuis Kaggle)
+data/raw/customer_churn.csv
+
+# Modèles dupliqués dans notebooks/
+notebooks/models/
+
+# Fichiers temporaires Word/PowerPoint
+~$*
+
+# Archives et fichiers internes
+*.zip
+CORRECTIONS_PPT.md
+RECAP_RESULTATS.md
+CLAUDE.md
+multicolinearity_proof.png
+Projet_Neil_Haci/soutenance_churn_v4.pptx
+
+# Anciens fichiers
 /create_presentation.py
 /presentation.md
 /presentation_soutenance.pptx
 /rapport.docx
 /rapport.md
-/venv
-/~$pport_churn_retention.docx
